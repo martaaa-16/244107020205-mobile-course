@@ -1,0 +1,9 @@
+# Flutter/Dart exclusions
+.dart_tool/
+build/
+.pub/
+pubspec.lock
+
+# IDE files
+.vscode/
+.idea/
