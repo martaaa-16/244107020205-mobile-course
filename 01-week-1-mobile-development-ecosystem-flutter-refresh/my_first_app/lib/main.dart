@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
               SizedBox(height: 16),
               Text('Marta Prama Daniswara', style: TextStyle(fontSize: 24)),
               SizedBox(height: 8),
-              Text('NIM: 2241720000', style: TextStyle(fontSize: 16, color: Colors.grey)),
+              Text('NIM: 244107020205', style: TextStyle(fontSize: 16, color: Colors.grey)),
               SizedBox(height: 4),
               Text('Program Studi: D4 Teknik Informatika', style: TextStyle(fontSize: 14)),
               SizedBox(height: 8),
