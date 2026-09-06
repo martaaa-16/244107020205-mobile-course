@@ -1,96 +1,192 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-void main() => runApp(const DashboardApp());
+const kWideBreakpoint = 700;
 
-class DashboardApp extends StatefulWidget {
-  const DashboardApp({super.key});
-
-  @override
-  State<DashboardApp> createState() => _DashboardAppState();
+void main() {
+  runApp(const AcademicOverviewApp());
 }
 
-class _DashboardAppState extends State<DashboardApp> {
+class AcademicOverviewApp extends StatefulWidget {
+  const AcademicOverviewApp({super.key});
+
+  @override
+  State<AcademicOverviewApp> createState() => _AcademicOverviewAppState();
+}
+
+class _AcademicOverviewAppState extends State<AcademicOverviewApp> {
   bool isDark = false;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
+
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.indigo,
+        brightness: Brightness.light,
+      ),
+
       darkTheme: ThemeData(
         useMaterial3: true,
-        brightness: Brightness.dark,
         colorSchemeSeed: Colors.indigo,
+        brightness: Brightness.dark,
       ),
+
       themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-      home: DashboardPage(
+
+      home: AcademicOverviewPage(
         isDark: isDark,
-        onDarkChanged: (value) => setState(() => isDark = value),
+        onDarkChanged: (value) {
+          setState(() {
+            isDark = value;
+          });
+        },
       ),
     );
   }
 }
 
-class DashboardPage extends StatelessWidget {
-  const DashboardPage({
+class AcademicOverviewPage extends StatelessWidget {
+  const AcademicOverviewPage({
+    super.key,
     required this.isDark,
     required this.onDarkChanged,
-    super.key,
   });
+
   final bool isDark;
   final ValueChanged<bool> onDarkChanged;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Dashboard'),
+        title: const Text('Ringkasan Akademik'),
         actions: [
-          Row(
-            children: [
-              Icon(isDark ? Icons.dark_mode : Icons.light_mode),
-              const SizedBox(width: 4),
-              Semantics(
-                label: 'Mode gelap',
-                hint: 'Aktifkan atau nonaktifkan mode gelap',
-                child: CupertinoSwitch(value: isDark, onChanged: onDarkChanged),
-              ),
-              const SizedBox(width: 12),
-            ],
+          Semantics(
+            label: 'Mode gelap',
+            hint: 'Aktifkan atau nonaktifkan mode gelap',
+            child: Row(
+              children: [
+                Icon(isDark ? Icons.dark_mode : Icons.light_mode),
+                const SizedBox(width: 4),
+                CupertinoSwitch(value: isDark, onChanged: onDarkChanged),
+                const SizedBox(width: 12),
+              ],
+            ),
           ),
         ],
       ),
+
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final columns = constraints.maxWidth >= 700 ? 2 : 1;
-          return GridView.count(
+          final isWide = constraints.maxWidth >= kWideBreakpoint;
+
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            crossAxisCount: columns,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 2.6,
-            children: [
-              Semantics(
-                label: 'Assignments, 8 tugas',
-                child: DashboardCard(title: 'Assignments', value: '8'),
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // HEADER PROFIL
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: colorScheme.primary,
+                        child: Icon(Icons.person, color: colorScheme.onPrimary),
+                      ),
 
-              Semantics(
-                label: 'Attendance, 92 persen',
-                child: DashboardCard(title: 'Attendance', value: '92%'),
-              ),
+                      const SizedBox(width: 16),
 
-              Semantics(
-                label: 'Portfolio, siap',
-                child: DashboardCard(title: 'Portfolio', value: 'Ready'),
-              ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Marta Prama Daniswara',
+                              style: theme.textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '244107020205 • TI-3D',
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                            Text(
+                              'D-IV Teknik Informatika',
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-              Semantics(
-                label: 'Current week, minggu ke 02',
-                child: DashboardCard(title: 'Current week', value: '02'),
-              ),
-            ],
+                const SizedBox(height: 20),
+
+                Text('Informasi Akademik', style: theme.textTheme.titleLarge),
+
+                const SizedBox(height: 12),
+
+                // KARTU INFORMASI
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: isWide ? 2 : 1,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: isWide ? 3.2 : 3.5,
+                  children: [
+                    Semantics(
+                      label: 'Tugas, 4 tugas',
+                      child: InfoCard(
+                        title: 'Tugas',
+                        value: '4',
+                        icon: Icons.assignment,
+                      ),
+                    ),
+
+                    Semantics(
+                      label: 'Kehadiran, 100 persen',
+                      child: InfoCard(
+                        title: 'Kehadiran',
+                        value: '100%',
+                        icon: Icons.event_available,
+                      ),
+                    ),
+
+                    Semantics(
+                      label: 'IPK saat ini, 3,71',
+                      child: InfoCard(
+                        title: 'IPK Saat Ini',
+                        value: '3.71',
+                        icon: Icons.school,
+                      ),
+                    ),
+
+                    Semantics(
+                      label: 'Tugas Selesai, 10 tugas selesai',
+                      child: InfoCard(
+                        title: 'Tugas Selesai',
+                        value: '10',
+                        icon: Icons.check_circle,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -98,20 +194,41 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-class DashboardCard extends StatelessWidget {
-  const DashboardCard({required this.title, required this.value, super.key});
+// WIDGET REUSABLE
+class InfoCard extends StatelessWidget {
+  const InfoCard({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.icon,
+  });
+
   final String title;
   final String value;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Card(
-      child: Padding(
+      elevation: 0,
+      child: Container(
         padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colorScheme.outlineVariant),
+        ),
         child: Row(
           children: [
-            Expanded(child: Text(title)),
-            Text(value, style: Theme.of(context).textTheme.headlineSmall),
+            Icon(icon, size: 32, color: colorScheme.primary),
+
+            const SizedBox(width: 16),
+
+            Expanded(child: Text(title, style: theme.textTheme.titleMedium)),
+
+            Text(value, style: theme.textTheme.headlineSmall),
           ],
         ),
       ),
