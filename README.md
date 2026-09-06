@@ -13,3 +13,4 @@ Repository untuk praktikum mata kuliah Pemrograman Mobile.
 ## List Laporan 
 
 - [Laporan Minggu-01](./Pratikum%201/my_first_app/README.md)
+- [Laporan Minggu-02](./02-week-2-declarative-ui-responsive-design/README.md)
