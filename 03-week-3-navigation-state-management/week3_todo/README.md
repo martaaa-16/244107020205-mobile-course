@@ -1,17 +1,31 @@
-# week3_todo
+# Praktikum 3 - Pengujian Tiga State
 
-A new Flutter project.
+1. Salin kode di atas ke project ToDo Anda atau project terpisah, lalu jalankan. Amati tampilan loading selama 2 detik pertama.
 
-## Getting Started
+2. Ubah `build()` sementara agar melempar error:
 
-This project is a starting point for a Flutter application.
+  ```dart
+  throw Exception('Gagal terhubung ke server');
+  ```
 
-A few resources to get you started if this is your first Flutter project:
+  Jalankan aplikasi dan amati UI error beserta tombol `Coba lagi`.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+  **Jawaban:** Tombol `Coba lagi` belum dapat ditekan otomatis karena Flutter Driver Extension belum aktif. Namun, handler tombol sudah terpasang melalui `ref.invalidate(productsProvider)`.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<p align="center">
+  <img src="screenshots/1.png" width="350">
+</p>
+
+3. Tekan tombol `Coba lagi`. `ref.invalidate` akan menjalankan ulang provider. Pulihkan kode, lalu pastikan state success tampil.
+
+  **Jawaban:** State success berhasil tampil dengan daftar produk Keyboard, Mouse, dan Monitor.
+
+<p align="center">
+  <img src="screenshots/2.png" width="350">
+</p>
+
+4. Refleksikan: Mengapa menampilkan ulang data lama (stale data) dengan indikator refresh kadang lebih baik daripada mengosongkan layar? Kapan pola tersebut penting?
+
+  **Jawaban:** Menampilkan data lama dengan indikator refresh lebih baik karena layar tetap berguna dan tidak kosong saat menunggu data baru.
+
+  Pola ini penting untuk dashboard, daftar produk, feed, dan aplikasi dengan koneksi lambat. Namun, data lama sebaiknya tidak digunakan untuk informasi kritis seperti saldo, pembayaran, atau stok real-time.
