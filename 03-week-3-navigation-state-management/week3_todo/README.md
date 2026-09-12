@@ -29,3 +29,40 @@
   **Jawaban:** Menampilkan data lama dengan indikator refresh lebih baik karena layar tetap berguna dan tidak kosong saat menunggu data baru.
 
   Pola ini penting untuk dashboard, daftar produk, feed, dan aplikasi dengan koneksi lambat. Namun, data lama sebaiknya tidak digunakan untuk informasi kritis seperti saldo, pembayaran, atau stok real-time.
+
+
+# 5. AI Challange
+
+Penjelasan setiap bagian kode dalam komentar:
+- stats_provider.dart: StatsNotifier, delay 2 detik, peluang gagal 30%, dan satu statsProvider.
+- stats_page.dart: menangani loading, error + retry, dan success dengan 3 item ListView.
+- main.dart: StatsPage dijadikan halaman utama.
+- stats_provider_test.dart: unit test sukses dan gagal.
+- widget_test.dart: diperbarui untuk Riverpod.
+
+### AI Verification Checklist
+
+| Pemeriksaan | Temuan | Status |
+|---|---|---|
+| State immutable | Tidak ditemukan `state.add()` atau mutasi list langsung. `TodoListNotifier` membuat salinan dengan spread operator, lalu melakukan assignment ke `state`; `StatsNotifier` mengembalikan list baru. | LULUS |
+| `ref.watch` dan `ref.read` | `ref.watch` hanya digunakan di dalam `build`. Callback retry memakai `ref.invalidate`, sedangkan callback ToDo memakai `ref.read` untuk memanggil notifier. | LULUS |
+| Tiga state `AsyncValue` | `StatsPage` menangani `loading` dengan spinner, `error` dengan pesan dan tombol retry, serta `data` dengan `ListView` berisi tiga item. | LULUS |
+| Provider eksplisit dan unik | `statsProvider` bertipe `AsyncNotifierProvider<StatsNotifier, List<Statistic>>`; provider lain (`productsProvider` dan `todoListProvider`) memiliki nama serta tipe berbeda dan tidak duplikat. | LULUS |
+| API Riverpod lama atau antipattern | Tidak ditemukan `StateProvider`, `StateNotifierProvider`, atau `Consumer` bertingkat yang tidak perlu. Implementasi memakai `AsyncNotifier`, `Notifier`, dan `ConsumerWidget`. | LULUS |
+| `flutter analyze` | `No issues found!` | LULUS |
+| `flutter test` | `00:01 +3: All tests passed!` | LULUS |
+
+Kesimpulan: kode memenuhi seluruh pemeriksaan di atas dan dapat diterima berdasarkan audit statis serta hasil test pada 12 September 2026.
+
+## Refactoring Challenge
+
+- Widget baris tugas dipisahkan menjadi `TodoTile` di `lib/widgets/todo_tile.dart`.
+- `incompleteTodosProvider` membaca `todoListProvider` dan menyaring tugas yang belum selesai.
+- GoRouter menyediakan route `/` untuk daftar ToDo dan `/stats` untuk statistik.
+- `NavigationBar` pada `AppShell` digunakan untuk berpindah antara daftar dan statistik.
+- Test tambahan mencakup provider filter dan perpindahan ke halaman statistik.
+
+Validasi setelah refactoring:
+
+- `flutter analyze`: `No issues found!`
+- `flutter test`: `00:02 +5: All tests passed!`

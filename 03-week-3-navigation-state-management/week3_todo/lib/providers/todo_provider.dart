@@ -21,8 +21,21 @@ class TodoListNotifier extends Notifier<List<Todo>> {
     state = todos;
   }
 
+  void toggleTodo(Todo todo) {
+    final index = state.indexOf(todo);
+    if (index != -1) {
+      toggle(index);
+    }
+  }
+
   void remove(int index) => state = [...state]..removeAt(index);
 }
 
-final todoListProvider =
-    NotifierProvider<TodoListNotifier, List<Todo>>(TodoListNotifier.new);
+final todoListProvider = NotifierProvider<TodoListNotifier, List<Todo>>(
+  TodoListNotifier.new,
+);
+
+final incompleteTodosProvider = Provider<List<Todo>>((ref) {
+  final todos = ref.watch(todoListProvider);
+  return todos.where((todo) => !todo.done).toList(growable: false);
+});
