@@ -54,15 +54,8 @@ Penjelasan setiap bagian kode dalam komentar:
 
 Kesimpulan: kode memenuhi seluruh pemeriksaan di atas dan dapat diterima berdasarkan audit statis serta hasil test pada 12 September 2026.
 
-## Refactoring Challenge
 
-- Widget baris tugas dipisahkan menjadi `TodoTile` di `lib/widgets/todo_tile.dart`.
-- `incompleteTodosProvider` membaca `todoListProvider` dan menyaring tugas yang belum selesai.
-- GoRouter menyediakan route `/` untuk daftar ToDo dan `/stats` untuk statistik.
-- `NavigationBar` pada `AppShell` digunakan untuk berpindah antara daftar dan statistik.
-- Test tambahan mencakup provider filter dan perpindahan ke halaman statistik.
-
-Validasi setelah refactoring:
-
-- `flutter analyze`: `No issues found!`
-- `flutter test`: `00:02 +5: All tests passed!`
+Tampilan akhir
+<p align="center">
+  <img src="screenshots/3.png" width="350">
+</p>
