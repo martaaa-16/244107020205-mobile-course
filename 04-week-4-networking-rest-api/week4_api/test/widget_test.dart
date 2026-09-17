@@ -7,10 +7,12 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 
 import 'package:week4_api/main.dart';
 import 'package:week4_api/data/paged_posts.dart';
 import 'package:week4_api/data/models/post.dart';
+import 'package:week4_api/widgets/post_tile.dart';
 
 class FakePagedPostsNotifier extends PagedPostsNotifier {
   @override
@@ -33,5 +35,24 @@ void main() {
     );
 
     expect(find.text('Posts Paged'), findsOneWidget);
+  });
+
+  testWidgets('PostTile shows post details', (WidgetTester tester) async {
+    const post = Post(
+      userId: 1,
+      id: 7,
+      title: 'A post title',
+      body: 'A post body',
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: PostTile(post: post)),
+      ),
+    );
+
+    expect(find.text('7'), findsOneWidget);
+    expect(find.text('A post title'), findsOneWidget);
+    expect(find.text('A post body'), findsOneWidget);
   });
 }
