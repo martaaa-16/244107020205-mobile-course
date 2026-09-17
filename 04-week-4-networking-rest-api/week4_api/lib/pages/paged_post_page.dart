@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/network_errors.dart';
 import '../data/paged_posts.dart';
-import '../data/providers.dart';
 import '../widgets/post_tile.dart';
 
 class PagedPostPage extends ConsumerStatefulWidget {
@@ -73,7 +74,10 @@ class _PagedPostPageState extends ConsumerState<PagedPostPage> {
             );
           }
           final post = state.items[index];
-          return PostTile(post: post);
+          return PostTile(
+            post: post,
+            onTap: () => context.go('/post/${post.id}'),
+          );
         },
       ),
     );
