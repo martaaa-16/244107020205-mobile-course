@@ -167,13 +167,13 @@ class _SyncStatus extends StatelessWidget {
   }
 }
 
-class _NotesList extends StatelessWidget {
+class _NotesList extends ConsumerWidget {
   const _NotesList({required this.items});
 
   final List<Note> items;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (items.isEmpty) {
       return const Center(child: Text('No cached notes'));
     }
@@ -181,7 +181,16 @@ class _NotesList extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final note = items[index];
-        return NoteTile(note: note);
+        return NoteTile(
+          note: note,
+          onDelete: note.id == null
+              ? null
+              : () async {
+                  await ref.read(noteRepositoryProvider).deleteNote(note.id!);
+                  ref.invalidate(notesProvider);
+                  ref.invalidate(dirtyCountProvider);
+                },
+        );
       },
     );
   }

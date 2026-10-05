@@ -43,4 +43,15 @@ di folder [`docs/`](docs/):
 - [Output awal AI](docs/ai-challenge-initial-output.md)
 - [Keputusan storage final](docs/storage-decision.md)
 - [Hasil verifikasi](docs/ai-challenge-verification.md)
+- [Checklist verifikasi mandiri](docs/self-verification-checklist.md)
+
+## Error Umum dan Solusinya
+
+| Gejala | Penyebab umum | Solusi |
+| --- | --- | --- |
+| `MissingPluginException` pada `shared_preferences` atau `sqflite` | Plugin baru ditambahkan, tetapi aplikasi hanya di-hot reload atau hot restart | Hentikan aplikasi sepenuhnya, lalu jalankan ulang `flutter run`. |
+| `DatabaseException: table notes already exists` | Schema berubah tanpa migrasi atau database development masih memakai versi lama | Naikkan `version` database dan implementasikan `onUpgrade`; saat development, uninstall aplikasi untuk menghapus database lama. |
+| Badge dirty tidak pernah menjadi `0` | `markAllSynced()` tidak dipanggil setelah simulasi/server berhasil | Panggil `markAllSynced()` hanya setelah server menjawab sukses, lalu verifikasi dengan `countDirty()`. |
+| UI tidak refresh setelah tambah catatan | `notesProvider` tidak di-invalidasi setelah mutasi | Panggil `ref.invalidate(notesProvider)` setelah `addNote()` selesai. |
+| Test menyentuh database sungguhan | Test menggunakan `NoteRepository` asli | Gunakan `FakeNoteRepository` dan override `noteRepositoryProvider`, seperti pada [note_test.dart](test/note_test.dart). |
 

@@ -4,9 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../data/local/note.dart';
 
 class NoteTile extends StatelessWidget {
-  const NoteTile({super.key, required this.note});
+  const NoteTile({super.key, required this.note, this.onDelete});
 
   final Note note;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,20 @@ class NoteTile extends StatelessWidget {
       onTap: note.id == null ? null : () => context.push('/note/${note.id}'),
       title: Text(note.title),
       subtitle: Text(note.body),
-      trailing: note.dirty
-          ? const Chip(label: Text('Belum tersinkron'))
-          : const Icon(Icons.cloud_done),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          note.dirty
+              ? const Chip(label: Text('Belum tersinkron'))
+              : const Icon(Icons.cloud_done),
+          if (onDelete != null)
+            IconButton(
+              onPressed: onDelete,
+              icon: const Icon(Icons.delete_outline),
+              tooltip: 'Delete note',
+            ),
+        ],
+      ),
     );
   }
 }
