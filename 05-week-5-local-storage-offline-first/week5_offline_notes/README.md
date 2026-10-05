@@ -1,17 +1,36 @@
-# week5_offline_notes
+# Praktikum 3: Cache-first dan Sinkronisasi Catatan
 
-A new Flutter project.
+## Skenario Verifikasi
 
-## Getting Started
+1. Tekan tombol `+` di pojok kanan atas.
+2. Isi judul dan isi catatan, lalu tekan `Save`.
+3. Pastikan catatan tampil dengan status `Dirty`.
+4. Aktifkan toggle `Force offline`.
+5. Pastikan panel berubah menjadi `FORCE OFFLINE` dan sync ditahan.
+6. Tekan `Sync` untuk memastikan muncul pesan `Offline mode: sync skipped`.
+7. Matikan toggle `Force offline`.
+8. Tekan `Sync now` dan tunggu simulasi upload selama satu detik.
+9. Pastikan panel berubah menjadi `ONLINE MODE`, ikon catatan menjadi cloud, dan badge dirty menjadi `0`.
 
-This project is a starting point for a Flutter application.
+## Hasil Observasi
 
-A few resources to get you started if this is your first Flutter project:
+<table>
+  <tr>
+    <td align="center">
+      <img src="screenshots/1.png" width="350"><br>
+      <b>Gambar 1. Sebelum sync</b><br>
+      Force offline aktif, catatan masih <code>Dirty: 1</code>, dan sync ditahan.
+    </td>
+    <td align="center">
+      <img src="screenshots/2.png" width="350"><br>
+      <b>Gambar 2. Sesudah sync</b><br>
+      Online mode aktif, catatan sudah tersinkron, dan dirty menjadi <code>0</code>.
+    </td>
+  </tr>
+</table>
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+| Kondisi | Catatan | Status dirty | Hasil |
+| --- | --- | --- | --- |
+| Sebelum sync | Tetap tampil dari cache lokal | `Dirty: 1` | Sync dilewati saat offline |
+| Sesudah sync | Tetap tampil | `Dirty: 0` | Catatan ditandai synced |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
