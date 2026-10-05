@@ -34,3 +34,13 @@
 | Sebelum sync | Tetap tampil dari cache lokal | `Dirty: 1` | Sync dilewati saat offline |
 | Sesudah sync | Tetap tampil | `Dirty: 0` | Catatan ditandai synced |
 
+## AI Challenge
+
+Artefak prompt, output awal AI, keputusan storage, dan hasil verifikasi tersedia
+di folder [`docs/`](docs/):
+
+- [Prompt AI](docs/ai-challenge-prompt.md)
+- [Output awal AI](docs/ai-challenge-initial-output.md)
+- [Keputusan storage final](docs/storage-decision.md)
+- [Hasil verifikasi](docs/ai-challenge-verification.md)
+
