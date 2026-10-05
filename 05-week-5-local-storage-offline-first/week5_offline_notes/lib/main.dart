@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'data/local/database_init.dart';
+import 'pages/note_detail_page.dart';
 import 'pages/notes_page.dart';
+
+final appRouter = GoRouter(
+  routes: [
+    GoRoute(path: '/', builder: (context, state) => const NotesPage()),
+    GoRoute(
+      path: '/note/:id',
+      builder: (context, state) =>
+          NoteDetailPage(noteId: int.parse(state.pathParameters['id']!)),
+    ),
+  ],
+);
 
 void main() {
   initializeLocalDatabase();
@@ -16,7 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Offline Notes',
         theme: ThemeData(
           // This is the theme of your application.
@@ -36,7 +49,7 @@ class MyApp extends StatelessWidget {
           // tested with just a hot reload.
           colorScheme: .fromSeed(seedColor: Colors.teal),
         ),
-        home: const NotesPage(),
+        routerConfig: appRouter,
       ),
     );
   }

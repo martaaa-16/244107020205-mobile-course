@@ -50,20 +50,4 @@ class PostRepository {
     });
   }
 
-  Future<void> refreshPostsInBackground() async {
-    try {
-      final posts = await fetchPosts();
-      await saveCachedPosts(posts);
-    } on DioException {
-      // Offline refresh is best effort; keep showing the existing cache.
-    }
-  }
-
-  Future<List<Post>> loadPostsCacheFirst({void Function()? onRefresh}) async {
-    final cached = await readCachedPosts();
-    refreshPostsInBackground().then((_) {
-      onRefresh?.call();
-    });
-    return cached;
-  }
 }

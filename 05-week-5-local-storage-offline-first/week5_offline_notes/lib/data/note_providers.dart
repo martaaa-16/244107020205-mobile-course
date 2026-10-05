@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'local/note.dart';
 import 'repositories/note_repository.dart';
-import 'sync_notes.dart';
+import 'sync.dart';
 
 final noteRepositoryProvider = Provider<NoteRepository>((ref) {
   return NoteRepository();
@@ -21,6 +21,10 @@ final forceOfflineProvider = NotifierProvider<ForceOfflineNotifier, bool>(
 
 final notesProvider = FutureProvider<List<Note>>((ref) {
   return ref.watch(noteRepositoryProvider).fetchNotes();
+});
+
+final noteDetailProvider = FutureProvider.family<Note?, int>((ref, id) {
+  return ref.watch(noteRepositoryProvider).fetchNote(id);
 });
 
 final dirtyCountProvider = FutureProvider<int>((ref) {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/local/note.dart';
 import '../data/note_providers.dart';
+import '../widgets/note_tile.dart';
 
 class NotesPage extends ConsumerWidget {
   const NotesPage({super.key});
@@ -180,13 +181,7 @@ class _NotesList extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final note = items[index];
-        return ListTile(
-          title: Text(note.title),
-          subtitle: Text(note.body),
-          trailing: note.dirty
-              ? const Chip(label: Text('Dirty'))
-              : const Icon(Icons.cloud_done),
-        );
+        return NoteTile(note: note);
       },
     );
   }
