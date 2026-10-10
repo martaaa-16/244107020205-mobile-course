@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
 import '../providers/fcm_provider.dart';
+import '../routes.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -94,7 +95,7 @@ class HomePage extends ConsumerWidget {
                 subtitle: Text('Tanggal: ${item['date']}'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  context.go('/pengumuman/${item['id']}');
+                  context.go(AppRoutes.announcementDetail(item['id']!));
                 },
               ),
             ),

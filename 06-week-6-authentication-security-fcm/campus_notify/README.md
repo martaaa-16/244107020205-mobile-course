@@ -68,11 +68,12 @@ Pengujian berlangganan topik (*Topic Subscription*) `pengumuman-kampus`:
 
 ## 6. AI Challenge
 
-Proses pembuatan draf awal `PushService` dan verifikasi perilakunya dikoleksi dan didokumentasikan di folder [`docs/`](docs/):
+Proses pembuatan draf awal `PushService`, verifikasi perilaku, serta checklist mandiri dikoleksi dan didokumentasikan di folder [`docs/`](docs/):
 
 - 📄 [AI Challenge - Prompt](docs/ai-challenge-prompt.md)
 - 📄 [AI Challenge - Output Awal AI](docs/ai-challenge-initial-output.md)
 - 📄 [AI Verification Checklist & Keputusan Teknis](docs/ai-verification.md)
+- 📄 [Checklist Verifikasi Mandiri](docs/self-verification-checklist.md)
 
 ### Ringkasan Temuan & Keputusan Teknis
 
@@ -83,3 +84,23 @@ Proses pembuatan draf awal `PushService` dan verifikasi perilakunya dikoleksi da
 5. **Perbedaan Android 13+ vs iOS**: 
    - **Android 13+**: Memerlukan izin `POST_NOTIFICATIONS` runtime dan penyiapan `AndroidNotificationChannel` dengan `Importance.max`.
    - **iOS**: Memerlukan konfigurasi APNs, izin `requestPermission` alert/badge/sound, dan penyesuaian presentation options.
+
+---
+
+## 7. Refactoring, Testing, & Error Handling
+
+### 1. Refactoring Structure
+- **Centralized Routes** ([`lib/routes.dart`](file:///d:/244107020205-mobile-course/06-week-6-authentication-security-fcm/campus_notify/lib/routes.dart)): Semua string rute (`/`, `/login`, `/pengumuman/:id`) dan fungsi parser payload FCM `routeFromMessage(Map<String, dynamic> data)` terpusat pada satu file.
+- **User-Friendly Error Mapping** ([`lib/data/api_errors.dart`](file:///d:/244107020205-mobile-course/06-week-6-authentication-security-fcm/campus_notify/lib/data/api_errors.dart)): Pemetaan `DioException` (401, timeout, offline) diubah menjadi pesan berbahasa Indonesia yang jelas untuk pengguna UI.
+
+### 2. Unit Testing tanpa Firebase Sungguhan
+Logika ekstraksi rute dan authentikasi diuji pada berkas unit test [`test/auth_push_test.dart`](file:///d:/244107020205-mobile-course/06-week-6-authentication-security-fcm/campus_notify/test/auth_push_test.dart).
+
+```bash
+flutter analyze   # Result: No issues found!
+flutter test      # Result: All 5 tests passed!
+```
+
+---
+
+

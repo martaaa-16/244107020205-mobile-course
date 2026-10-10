@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../routes.dart';
 
 String? pendingDeepLink;
 
@@ -68,7 +69,7 @@ class PushService {
 
   void listenForeground(void Function(String route) go) {
     FirebaseMessaging.onMessage.listen((message) async {
-      final route = message.data['route'] ?? '/';
+      final route = routeFromMessage(message.data);
 
       const androidDetails = AndroidNotificationDetails(
         'pengumuman_channel_v2', // Ganti ID agar Android membuat kanal baru
@@ -88,20 +89,16 @@ class PushService {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      final route = message.data['route'];
-      if (route != null && route.isNotEmpty) {
-        go(route);
-      }
+      final route = routeFromMessage(message.data);
+      go(route);
     });
   }
 
   Future<void> handleTerminated(void Function(String route) go) async {
     final initial = await FirebaseMessaging.instance.getInitialMessage();
     if (initial != null) {
-      final route = initial.data['route'];
-      if (route != null && route.isNotEmpty) {
-        go(route);
-      }
+      final route = routeFromMessage(initial.data);
+      go(route);
     }
   }
 

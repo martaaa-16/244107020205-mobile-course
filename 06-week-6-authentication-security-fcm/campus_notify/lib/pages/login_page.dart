@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/api_errors.dart';
 import '../providers/auth_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -33,7 +34,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (state.hasError && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(state.error.toString().replaceAll('Exception: ', '')),
+          content: Text(getFriendlyErrorMessage(state.error!)),
           backgroundColor: Colors.red,
         ),
       );

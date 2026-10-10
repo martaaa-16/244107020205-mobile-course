@@ -9,6 +9,7 @@ import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'providers/auth_provider.dart';
 import 'providers/fcm_provider.dart';
+import 'routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,22 +24,22 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
 
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: AppRoutes.home,
     redirect: (context, state) {
       if (authState.isLoading) return null;
 
       final loggedIn = authState.value ?? false;
-      final goingToLogin = state.matchedLocation == '/login';
+      final goingToLogin = state.matchedLocation == AppRoutes.login;
 
-      if (!loggedIn && !goingToLogin) return '/login';
-      if (loggedIn && goingToLogin) return '/';
+      if (!loggedIn && !goingToLogin) return AppRoutes.login;
+      if (loggedIn && goingToLogin) return AppRoutes.home;
       return null;
     },
     routes: [
-      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
-      GoRoute(path: '/', builder: (context, state) => const HomePage()),
+      GoRoute(path: AppRoutes.login, builder: (context, state) => const LoginPage()),
+      GoRoute(path: AppRoutes.home, builder: (context, state) => const HomePage()),
       GoRoute(
-        path: '/pengumuman/:id',
+        path: AppRoutes.announcement,
         builder: (context, state) =>
             AnnouncementPage(id: state.pathParameters['id'] ?? ''),
       ),
