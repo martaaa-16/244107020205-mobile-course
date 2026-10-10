@@ -14,6 +14,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  registerBackgroundHandler();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -55,7 +57,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-    // Memanggil inisialisasi push notification setelah frame pertama selesai
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initPushNotifications();
     });
@@ -68,29 +69,21 @@ class _MyAppState extends ConsumerState<MyApp> {
     await pushService.initialize(
       onToken: (token) async {
         debugPrint('FCM Token: $token');
-
-        // 1. Simpan token ke NotifierProvider untuk UI Debug
         ref.read(fcmTokenProvider.notifier).setToken(token);
 
-        // 2. Pengiriman token ke backend sesuai spesifikasi[cite: 5]
         try {
           await dio.post(
             '/devices',
             data: {'fcm_token': token, 'platform': 'android'},
           );
-          debugPrint('Token FCM berhasil dikirim ke backend.');
         } catch (e) {
-          debugPrint('Simulasi/Gagal pengiriman token ke backend: $e');
+          debugPrint('Gagal mengirim token ke backend: $e');
         }
       },
+      onNavigate: (route) {
+        ref.read(routerProvider).go(route);
+      },
     );
-
-    // 3. Cek jika ada pendingDeepLink dari notifikasi lokal saat diklik
-    if (pendingDeepLink != null && pendingDeepLink!.isNotEmpty) {
-      final router = ref.read(routerProvider);
-      router.go(pendingDeepLink!);
-      pendingDeepLink = null; // Reset setelah digunakan
-    }
   }
 
   @override

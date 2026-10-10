@@ -1,15 +1,61 @@
-# Praktikum 2: FCM, permission, dan token lifecycle
+# Campus Notify - Push Notification & FCM
 
-- Tampilkan token di halaman Debug (terpotong, mis. 12 karakter pertama + ...)
-<img src="screenshot/1.jpeg" width="350"><br>
+## Praktikum 2: FCM, Permission, & Token Lifecycle
 
-- Hapus data aplikasi / reinstall, dan tunjukkan bahwa onTokenRefresh memperbarui token di backend
-<img src="screenshot/2.jpeg" width="350"><br>
+### 1. Tampilan Token di Halaman Debug
+Menampilkan FCM Device Token pada halaman Debug (ditampilkan secara terpotong, contoh: 12 karakter pertama + `...`):
 
-## 4. Uji kirim pertama dari Firebase Console
-1. Buka Firebase Console -> Messaging -> buat campaign notifikasi percobaan.
-2. Masukkan title dan body, targetkan aplikasi Android Anda.
-<img src="screenshot/3.png" width="350"><br>
-3. Kirim saat aplikasi dalam state background: banner sistem harus muncul. Klik banner: aplikasi terbuka.
-<img src="screenshot/fcm-console-test.jpeg" width="350"><br>
-4. Catat hasilnya sebagai bukti screenshots/fcm-console-test.png.
+<div align="center">
+  <img src="screenshot/1.jpeg" width="300" alt="Debug Token Page"><br>
+  <sub><b>Gambar 1:</b> Tampilan Token FCM pada Halaman Debug</sub>
+</div>
+
+<br>
+
+### 2. Penanganan Refresh Token (`onTokenRefresh`)
+Saat data aplikasi dihapus atau aplikasi di-reinstall, `onTokenRefresh` memicu pembaruan token baru dan mengirimkannya ke backend:
+
+<div align="center">
+  <img src="screenshot/2.jpeg" width="300" alt="Token Refresh"><br>
+  <sub><b>Gambar 2:</b> Pembaruan Token saat Reinstall / Refresh Token</sub>
+</div>
+
+<br>
+
+### 3. Uji Kirim Pertama dari Firebase Console
+
+1. Buka **Firebase Console** &rarr; **Messaging** &rarr; Buat campaign notifikasi percobaan.
+2. Masukkan **Title** dan **Body**, lalu targetkan ke aplikasi Android.
+
+<div align="center">
+  <img src="screenshot/3.png" width="450" alt="Firebase Console Campaign"><br>
+  <sub><b>Gambar 3:</b> Konfigurasi Campaign Notifikasi di Firebase Console</sub>
+</div>
+
+<br>
+
+3. Kirim notifikasi saat aplikasi dalam state **Background**. Banner sistem akan muncul, dan saat diklik, aplikasi akan terbuka:
+
+<div align="center">
+  <img src="screenshot/fcm-console-test.jpeg" width="300" alt="Hasil FCM Test Background"><br>
+  <sub><b>Gambar 4:</b> Banner Sistem Notifikasi FCM (Background State)</sub>
+</div>
+
+---
+
+## Praktikum 3: Payload, App States, & Routing
+
+### Matriks Pengujian Wajib
+
+Berikut adalah hasil pengujian penerimaan notifikasi berdasarkan 3 kondisi/state aplikasi:
+
+| App State | Screenshot | Hasil Observasi & Action |
+| :--- | :---: | :--- |
+| **Foreground** | <img src="screenshot/5.png" width="220" alt="Foreground State"> | Banner lokal muncul saat app aktif. Saat banner diklik, pengguna langsung diarahkan ke rute `/pengumuman/3`. |
+| **Background** | <img src="screenshot/4.png" width="220" alt="Background State"> | Banner sistem bawaan OS muncul. Saat banner diklik, aplikasi terbuka dan berpindah ke rute yang sesuai. |
+| **Terminated** | <img src="screenshot/6.png" width="220" alt="Terminated State"> | Banner sistem muncul saat aplikasi ditutup total. Klik banner membuka aplikasi ke rute tujuan melalui handler `getInitialMessage`. |
+
+---
+
+### Topic Messaging
+<img src="screenshot/7.png" 
