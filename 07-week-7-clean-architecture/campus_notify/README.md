@@ -27,3 +27,9 @@
   
 
 > **Catatan Refactor**: Item temuan pada `auth_provider.dart` ini akan diperbaiki pada Praktikum 2 & 3 agar memenuhi standar Clean Architecture.
+
+### 5. Praktikum 3: Presentation, DI, dan verifikasi
+Proses refactoring pada fitur `notes` berhasil diselesaikan sesuai standar **Clean Architecture**. Aplikasi berjalan dengan fungsi yang sama seperti sebelum _refactor_, namun memiliki struktur kode yang jauh lebih rapi, terisolasi, dan siap untuk pengembangan skala besar.
+<div align="center">
+<img src="screenshot/2.png" width="300" alt=""><br>
+</div>

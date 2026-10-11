@@ -1,29 +1,46 @@
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:campus_notify/core/failure.dart';
-import 'package:campus_notify/features/notes/domain/entities/note.dart';
-import 'package:campus_notify/features/notes/domain/repositories/note_repository.dart';
-import 'package:campus_notify/features/notes/data/models/note_model.dart';
+
+import '../../../../core/failure.dart';
+import '../../domain/entities/note.dart';
+import '../../domain/repositories/note_repository.dart';
+import '../models/note_model.dart';
+
+Future<Database> openNotesDb() async {
+  final dbPath = await getDatabasesPath();
+  final path = join(dbPath, 'notes.db');
+
+  return openDatabase(
+    path,
+    version: 1,
+    onCreate: (db, version) async {
+      await db.execute('''
+        CREATE TABLE notes (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          body TEXT NOT NULL,
+          updatedAt TEXT NOT NULL,
+          dirty INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
+    },
+  );
+}
 
 class NoteRepositoryImpl implements NoteRepository {
-  NoteRepositoryImpl({required Future<Database> Function() openDb})
-      : _openDb = openDb;
+  final Future<Database> Function() openDb;
 
-  final Future<Database> Function() _openDb;
+  NoteRepositoryImpl({required this.openDb});
 
-  @override
-  Future<({List<Note> notes, Failure? failure})> fetchNotes() async {
+@override
+  Future<({Failure? failure, List<Note> notes})> fetchNotes() async {
     try {
-      final db = await _openDb();
-      final rows =
-          await db.query('notes', orderBy: 'updated_at DESC');
-      final notes =
-          rows.map((r) => NoteModel.fromMap(r).toEntity()).toList();
-      return (notes: notes, failure: null);
+      final db = await openDb();
+      final maps = await db.query('notes', orderBy: 'updatedAt DESC');
+      final notes = maps.map((map) => NoteModel.fromMap(map)).toList();
+      return (failure: null, notes: notes);
     } catch (e) {
-      return (
-        notes: const <Note>[],
-        failure: LocalFailure('Gagal membaca catatan: $e'),
-      );
+      return (failure: LocalFailure(e.toString()), notes: <Note>[]);
     }
   }
 
@@ -33,22 +50,25 @@ class NoteRepositoryImpl implements NoteRepository {
     String body = '',
   }) async {
     try {
-      final db = await _openDb();
+      final db = await openDb();
       final now = DateTime.now();
-      final id = await db.insert(
-        'notes',
-        NoteModel(
-            title: title, body: body, updatedAt: now, dirty: true)
-            .toMap(),
+      final id = await db.insert('notes', {
+        'title': title,
+        'body': body,
+        'updatedAt': now.toIso8601String(),
+        'dirty': 0,
+      });
+
+      final newNote = Note(
+        id: id,
+        title: title,
+        body: body,
+        updatedAt: now,
       );
-      return (
-        note: Note(id: id, title: title, body: body,
-            updatedAt: now, dirty: true),
-        failure: null,
-      );
+
+      return (note: newNote, failure: null);
     } catch (e) {
-      return (note: null,
-          failure: LocalFailure('Gagal menyimpan catatan: $e'));
+      return (note: null, failure: LocalFailure(e.toString()));
     }
   }
 }
