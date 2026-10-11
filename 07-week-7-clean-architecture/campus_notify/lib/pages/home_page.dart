@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../core/format.dart';
 import '../providers/auth_provider.dart';
 import '../providers/fcm_provider.dart';
 import '../routes.dart';
@@ -92,7 +94,7 @@ class HomePage extends ConsumerWidget {
               child: ListTile(
                 leading: const Icon(Icons.campaign, color: Colors.deepPurple),
                 title: Text(item['title']!),
-                subtitle: Text('Tanggal: ${item['date']}'),
+                subtitle: Text('Tanggal: ${formatDisplayDate(item['date'])}'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
                   context.go(AppRoutes.announcementDetail(item['id']!));

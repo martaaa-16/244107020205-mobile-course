@@ -1,3 +1,5 @@
+import 'core/format.dart';
+
 class AppRoutes {
   static const String home = '/';
   static const String login = '/login';
@@ -7,7 +9,5 @@ class AppRoutes {
 }
 
 String routeFromMessage(Map<String, dynamic> data) {
-  final route = data['route']?.toString() ?? AppRoutes.home;
-  if (route.isEmpty) return AppRoutes.home;
-  return route.startsWith('/') ? route : '/$route';
+  return normalizeRoute(data['route']?.toString(), fallback: AppRoutes.home);
 }

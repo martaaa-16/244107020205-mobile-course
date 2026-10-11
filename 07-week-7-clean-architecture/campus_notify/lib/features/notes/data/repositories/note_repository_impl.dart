@@ -32,15 +32,15 @@ class NoteRepositoryImpl implements NoteRepository {
 
   NoteRepositoryImpl({required this.openDb});
 
-@override
+  @override
   Future<({Failure? failure, List<Note> notes})> fetchNotes() async {
     try {
       final db = await openDb();
       final maps = await db.query('notes', orderBy: 'updatedAt DESC');
       final notes = maps.map((map) => NoteModel.fromMap(map)).toList();
       return (failure: null, notes: notes);
-    } catch (e) {
-      return (failure: LocalFailure(e.toString()), notes: <Note>[]);
+    } catch (error) {
+      return (failure: Failure.fromObject(error), notes: <Note>[]);
     }
   }
 
@@ -59,16 +59,11 @@ class NoteRepositoryImpl implements NoteRepository {
         'dirty': 0,
       });
 
-      final newNote = Note(
-        id: id,
-        title: title,
-        body: body,
-        updatedAt: now,
-      );
+      final newNote = Note(id: id, title: title, body: body, updatedAt: now);
 
       return (note: newNote, failure: null);
-    } catch (e) {
-      return (note: null, failure: LocalFailure(e.toString()));
+    } catch (error) {
+      return (note: null, failure: Failure.fromObject(error));
     }
   }
 }

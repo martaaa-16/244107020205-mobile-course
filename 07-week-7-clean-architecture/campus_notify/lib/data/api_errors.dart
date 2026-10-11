@@ -1,6 +1,11 @@
+import 'package:campus_notify/core/failure.dart';
 import 'package:dio/dio.dart';
 
 String getFriendlyErrorMessage(Object error) {
+  if (error is Failure) {
+    return error.message;
+  }
+
   if (error is DioException) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
@@ -27,5 +32,6 @@ String getFriendlyErrorMessage(Object error) {
         return 'Terjadi kesalahan jaringan yang tidak diketahui.';
     }
   }
-  return error.toString().replaceAll('Exception: ', '');
+
+  return Failure.fromObject(error).message;
 }
